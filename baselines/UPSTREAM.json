@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "development_repository_revision": "7573786b4619a1bccf84a8d0501716dfaa842b08",
+  "methods": {
+    "flashattention": {
+      "upstream": "https://github.com/Dao-AILab/flash-attention",
+      "distribution": "flash-attn==2.8.3.post1",
+      "license": "BSD-3-Clause",
+      "submission_source_sha256": {
+        "baselines/FlashAttention.py": "364bd9223c5743d4c2d220226086642e93b9650b5644fa3e5d0f5cb98bd08808"
+      },
+      "execution": "transformers attn_implementation=flash_attention_2"
+    },
+    "flexprefill": {
+      "upstream": "https://github.com/ByteDance-Seed/FlexPrefill",
+      "audited_upstream_revision": "a24b27bf117fd6ad4ba34b0db82c598e7786fd59",
+      "development_source_sha256": "792f37f5dc68117a672611b961f04d4823a20aa2d5ec8199c76fc1be6887ae45",
+      "license_reference": "Apache-2.0 upstream; local adapter provenance follows the BTS development repository",
+      "submission_source_sha256": {
+        "baselines/FlexPrefill.py": "aed0ba4168c2a981dfc3a43555968f3e2411494828eb645345b56bca9e4089a8"
+      },
+      "frozen_parameters": {
+        "gamma": 0.95,
+        "tau": 0.1,
+        "block_size": 128,
+        "min_budget": null,
+        "max_budget": null,
+        "gqa_interleave": false
+      }
+    },
+    "minference": {
+      "upstream": "https://github.com/microsoft/MInference",
+      "distribution": "minference==0.1.6.0",
+      "development_source_sha256": "c84e5a3c48621dfdfd3b05df012172501b1b984831f606823316680a52423626",
+      "index_converter_source_sha256": "4c8788990771127fcd38adb68f845a755fb35a2bd6e3c8c8b521c22f3c6e025d",
+      "license": "MIT",
+      "submission_source_sha256": {
+        "baselines/Minference.py": "299359a86b3947f46d4fd68fd6e2601a810ce3ace69534b6299db09046ad2a47",
+        "baselines/minference_index.py": "4014a60a9da41b841dedda462ae475ec40826bbb1c875b09bb43a0d6cadc22d6",
+        "baselines/minference_runtime.py": "ec7a12c9f227607524283ee710fd2c6a75a844d2ceb4237a1d9b428734c88b6a"
+      },
+      "frozen_parameters": {
+        "vertical_size": 512,
+        "slash_size": 2048,
+        "adaptive_budget": null,
+        "block_size": 128,
+        "backend": "triton_fallback",
+        "gqa_memory_optimized": true,
+        "index_converter": "triton_leak_free"
+      }
+    },
+    "xattention": {
+      "upstream": "https://github.com/mit-han-lab/x-attention",
+      "audited_upstream_revision": "e37988770b9d1bebd489eba011d615f35587ba08",
+      "development_source_sha256": "e65c4db1ee5ee0664a91fac2ff720212c08d33a71757893865edad8260088221",
+      "upstream_license_observation": "No top-level LICENSE or NOTICE was present at the audited revision; no license is inferred here.",
+      "kernel_upstream": "https://github.com/mit-han-lab/Block-Sparse-Attention",
+      "kernel_revision": "49d6c39e4dc0303442cda3bb758b3925d4399c49",
+      "kernel_distribution": "block_sparse_attn==0.0.2",
+      "kernel_install": "block_sparse_attn @ git+https://github.com/mit-han-lab/Block-Sparse-Attention.git@49d6c39e4dc0303442cda3bb758b3925d4399c49",
+      "kernel_license": "BSD-3-Clause",
+      "submission_source_sha256": {
+        "baselines/XAttention.py": "a49ba163c80991fcbbe1c8f660015643afa6e39e299e675903e3d09c4815c036"
+      },
+      "frozen_parameters": {
+        "stride": 8,
+        "threshold": 0.9,
+        "block_size": 128,
+        "keep_sink": true,
+        "keep_recent": true,
+        "deterministic": true
+      }
+    }
+  }
+}

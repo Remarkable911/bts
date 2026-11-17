@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bts"
+version = "0.3.0"
+description = "Frozen BTS token-sparse attention submission"
+readme = "README.md"
+requires-python = ">=3.10"
+license-files = [
+    "THIRD_PARTY_NOTICES.md",
+    "baselines/licenses/*.txt",
+    "eval/common/lm_eval_harness/LICENSE.md",
+]
+dependencies = [
+    "torch>=2.6,<3",
+    "triton>=3.2,<4",
+    "transformers>=4.55.1,<6",
+    "ninja",
+]
+
+[project.optional-dependencies]
+fastdeploy = ["transformers>=4.55.1,<5"]
+# flash-attn is intentionally staged outside this extra: its source build imports
+# torch during setup and therefore requires an already-installed torch plus
+# ``--no-build-isolation``.  See README.md and eval/ThreeWay/README.md.
+vllm = ["vllm==0.17.0"]
+baselines = [
+    "flash-attn==2.8.3.post1",
+    "einops==0.8.2",
+    "minference==0.1.6.0",
+    "block_sparse_attn @ git+https://github.com/mit-han-lab/Block-Sparse-Attention.git@49d6c39e4dc0303442cda3bb758b3925d4399c49",
+]
+test = ["pytest>=8"]
+dev = ["pytest>=8"]
+
+[project.entry-points."fastdeploy.model_register_plugins"]
+bts = "bts_fastdeploy.plugin:register"
+
+[project.entry-points."vllm.general_plugins"]
+bts_vllm = "bts_vllm.plugin:register"
+bts_vllm_fa2_compat = "bts_vllm.fa2_compat:register"
+
+[project.scripts]
+bts-fastdeploy = "bts_fastdeploy.run:main"
+
+[tool.setuptools]
+packages = [
+    "bts",
+    "bts.kernels",
+    "bts.utils",
+    "baselines",
+    "bts_fastdeploy",
+    "bts_vllm",
+]
+include-package-data = true
+
+[tool.setuptools.package-dir]
+bts_fastdeploy = "integrations/fastdeploy/src/bts_fastdeploy"
+bts_vllm = "integrations/vllm/src/bts_vllm"
+
+[tool.setuptools.package-data]
+"bts.kernels" = [
+    "*.cpp",
+    "*.cu",
+]
+"baselines" = ["README.md", "UPSTREAM.json", "licenses/*.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

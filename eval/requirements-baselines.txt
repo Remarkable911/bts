@@ -1,0 +1,9 @@
+# Frozen external dependencies for baselines/. Use Python 3.10 and install with
+# --no-build-isolation so flash-attn and block-sparse-attn see the installed
+# Torch/CUDA toolchain.
+flash-attn==2.8.3.post1
+einops==0.8.2
+minference==0.1.6.0
+# The XAttention kernel is not published on PyPI. Pin the audited upstream
+# source revision; its installed distribution metadata is block_sparse_attn 0.0.2.
+block_sparse_attn @ git+https://github.com/mit-han-lab/Block-Sparse-Attention.git@49d6c39e4dc0303442cda3bb758b3925d4399c49

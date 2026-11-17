@@ -1,0 +1,30 @@
+{
+  "schema_version": "bts_fastdeploy_approved_upstream_sources_v1",
+  "packages": {
+    "fastdeploy-gpu": {
+      "version": "2.5.0",
+      "files": {
+        "fastdeploy/engine/args_utils.py": "ab085e20d9c57be3512c12f914ef45fd666bf39723d37064aaefe58e99cd8b80",
+        "fastdeploy/model_executor/layers/attention/attention.py": "a7a61ba61087303f1dbd9641a04f352c42c1bee329953bce6ba7f56060f950c1",
+        "fastdeploy/model_executor/layers/attention/attention_selecter.py": "a4c1cd64e1f86da1ca5e218663cf54590206fc85e1b650a3043a4c92f9d77dec",
+        "fastdeploy/model_executor/layers/attention/flash_attn_backend.py": "84d68d721e382362db340412ffae41fb2d2a1cf61df35dc657656925ccf6355b",
+        "fastdeploy/model_executor/models/paddleformers/base.py": "a9a5435ed00b79ff97b6e2feb8212c406157ec33acf9552175d1ffc0628290b1"
+      }
+    },
+    "paddleformers": {
+      "version": "1.1.1",
+      "files": {
+        "paddleformers/nn/attention/interface.py": "1cc70f68c51e408b81625d941567c29a884cdf9103bc9a45b72d8ce522404684",
+        "paddleformers/transformers/modeling_rope_utils.py": "623343895f26eb1c220c8a902aaca943d40bbb47d465d5799ef150b27b28321e",
+        "paddleformers/transformers/qwen3/configuration.py": "87d115780e72dedeec90873ce87c9e40ff66339ffd6c9f781adef9db4bfa2a6b",
+        "paddleformers/transformers/qwen3/modeling.py": "8aa0f71de5e28cc95fca121a2bc436ebfff4e87f4939b64440465d88bfc6d3f9"
+      }
+    },
+    "paddlepaddle-gpu": {
+      "version": "3.3.1",
+      "files": {
+        "paddle/nn/functional/flash_attention.py": "804113b374e5a69a0cfec84127ef29e46cf1880aa401e2f1fe00ae0f009c45df"
+      }
+    }
+  }
+}

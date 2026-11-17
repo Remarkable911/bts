@@ -1,0 +1,40 @@
+# Runtime-only dependencies for the compact bundled lm-eval 0.4.9.2 subset.
+# Torch, Triton and Transformers are supplied by the submission package itself.
+accelerate>=0.26,<2
+datasets>=2.16,<6
+evaluate>=0.4,<1
+jinja2>=3,<4
+jsonlines>=4,<5
+pytablewriter>=1,<2
+rouge-score>=0.1,<1
+sacrebleu>=1.5,<3
+scikit-learn>=0.24,<2
+sqlitedict>=2,<3
+zstandard>=0.22,<1
+dill>=0.3,<1
+word2number>=1.1,<2
+more-itertools>=10,<12
+PyYAML>=6,<7
+tqdm>=4,<5
+packaging>=24,<27
+huggingface-hub>=0.36,<2
+requests>=2,<3
+
+# LongBench metrics.
+jieba>=0.42,<1
+fuzzywuzzy>=0.18,<1
+python-Levenshtein>=0.27,<1
+rouge>=1.0,<2
+
+# RULER data construction and metrics.
+nltk>=3.9,<4
+wonderwords>=2.2,<3
+scipy>=1.10,<2
+html2text>=2024.2
+httpx>=0.27,<1
+beautifulsoup4>=4.12,<5
+
+# Minerva Math / MATH-500 answer verification.
+sympy>=1.12,<2
+antlr4-python3-runtime==4.11.*
+math-verify[antlr4_11_0]>=0.8,<1

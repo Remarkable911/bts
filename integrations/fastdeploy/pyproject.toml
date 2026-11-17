@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bts-fastdeploy"
+version = "0.3.0"
+description = "Opt-in FastDeploy 2.5 adapter for the frozen BTS submission method"
+requires-python = ">=3.10"
+dependencies = [
+    "bts[fastdeploy]==0.3.0",
+    "transformers>=4.55.1,<5",
+]
+
+[project.entry-points."fastdeploy.model_register_plugins"]
+bts = "bts_fastdeploy.plugin:register"
+
+[project.scripts]
+bts-fastdeploy = "bts_fastdeploy.run:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

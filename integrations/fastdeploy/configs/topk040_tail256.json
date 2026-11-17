@@ -1,0 +1,7 @@
+{
+  "token": {
+    "token_select": "block_count",
+    "token_ratio": 0.4,
+    "dense_tail_tokens": 256
+  }
+}
