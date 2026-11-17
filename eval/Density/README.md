@@ -16,11 +16,16 @@ layer. Later layers therefore receive dense upstream hidden states. Density is
 the arithmetic mean of the 36 final logical-block densities; no generation or
 decode is performed.
 
-The default suite is:
+Set the suite location for your machine before running:
 
-```text
-/home/lsf/experiments/prism-token-sparse/results/ruler/topk040_tail256_official_protocol_20261105
+```bash
+export RULER_SUITE_ROOT=/absolute/path/to/ruler_suite
 ```
+
+The frozen suite and official output logs are not included in this repository.
+For compatibility, omitting the variable retains the legacy lookup under
+`$PRISM_REFERENCE_ROOT/results/ruler/topk040_tail256_official_protocol_20261105`,
+where `PRISM_REFERENCE_ROOT` defaults to the parent of the checkout.
 
 A real run fails before model loading if the suite, selected 128K JSONL files,
 the five exact official output logs, or the bundled parent-plan manifest fail
@@ -32,7 +37,7 @@ bash scripts/run_density.sh \
   --model Qwen/Qwen3-8B \
   --revision b968826d9c46dd6066d109eabc6255188de91218 \
   --attention bts \
-  --ruler-suite /home/lsf/experiments/prism-token-sparse/results/ruler/topk040_tail256_official_protocol_20261105 \
+  --ruler-suite "$RULER_SUITE_ROOT" \
   --samples-per-task 10 \
   --output /external/results/density-bts
 ```

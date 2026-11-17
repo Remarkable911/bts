@@ -134,7 +134,7 @@ VERIFIED_REFERENCES = {
         "score": 40.8784696310,
         "score_text": "40.8784696310",
         "raw_result_path": (
-            "../results/longbench/topk040_tail256_20261031/"
+            "results/longbench/topk040_tail256_20261031/"
             "results_2026-11-01T03-39-55.872698.json"
         ),
         "raw_result_sha256": (
@@ -157,7 +157,7 @@ VERIFIED_REFERENCES = {
             "131072": "69.6769231",
         },
         "raw_result_path": (
-            "/data3/lsf_data/prism_data/results/ruler/"
+            "results/ruler/"
             "topk040_tail256_official_protocol_threshold095_20261105/outputs/"
             "results_2026-11-06T22-31-42.346281.json"
         ),
@@ -176,7 +176,10 @@ def _verified_reference(name: str) -> dict:
     reference = json.loads(json.dumps(VERIFIED_REFERENCES[name]))
     path = Path(reference["raw_result_path"]).expanduser()
     if not path.is_absolute():
-        path = SUBMISSION_ROOT / path
+        reference_root = Path(
+            os.environ.get("PRISM_REFERENCE_ROOT", str(SUBMISSION_ROOT.parent))
+        ).expanduser()
+        path = reference_root / path
     path = path.resolve(strict=False)
     observed = _sha256(path) if path.is_file() else None
     reference.update(

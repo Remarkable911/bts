@@ -1,7 +1,7 @@
 # Evaluation launchers
 
-`scripts/` 只保留四个有父目录完整结果支撑的稳定入口。`PYTHON_BIN` 可指定评测环境；
-调用方参数优先于脚本默认值。
+`scripts/` 提供四个评测入口。`PYTHON_BIN` 可指定评测环境；调用方参数优先于脚本
+默认值。下表记录开发阶段的历史参考，相关原始产物未随仓库发布。
 
 | 入口 | 默认协议 | 已核验父目录参考 |
 |---|---|---|
@@ -13,6 +13,8 @@
 以下命令会启动完整 GPU 评测，并把新测结果写入各 runner 的默认输出目录：
 
 ```bash
+export EFFICIENCY_REPLAY_ROOT=/absolute/path/to/efficiency_replays
+export RULER_SUITE_ROOT=/absolute/path/to/ruler_suite
 PYTHON_BIN=/path/to/python bash scripts/run_efficiency.sh
 PYTHON_BIN=/path/to/python bash scripts/run_longbench.sh
 PYTHON_BIN=/path/to/python bash scripts/run_ruler.sh
@@ -37,19 +39,19 @@ lm-eval 的任务/分组表；Efficiency 打印方法 × 长度的实测 latency
 pruning、标准差、pruning 范围及 `≤10%` 验收结果。Efficiency/Density 的终端表只读取
 本次运行内存中的测量结果，历史 reference 不会被填入表格；完整审计字段仍保存在 JSON。
 
-Efficiency 默认读取：
+Efficiency 的默认 layer-12 协议要求设置 `EFFICIENCY_REPLAY_ROOT`，也可用
+`--attention-inputs-dir` 指定 replay 目录。目录中应有 `replay_32768.pt`、
+`replay_65536.pt` 和 `replay_131072.pt`；这些输入不随仓库发布。显式的 `--prompt` 或
+`--data-path` 可用于捕获自定义输入，但不能据此声称复现历史 replay。
 
-```text
-/data3/lsf_data/prism_artifacts/efficiency_review_20261009_inputs
-```
-
-搬移后设置 `EFFICIENCY_REPLAY_ROOT`。RULER 和 Density 默认读取父目录的：
+RULER 和 Density 应设置 `RULER_SUITE_ROOT`。为兼容原来的开发目录布局，未设置时
+仍会读取父目录的：
 
 ```text
 results/ruler/topk040_tail256_official_protocol_20261105
 ```
 
-搬移后设置 `RULER_SUITE_ROOT`；也可用 `PRISM_REFERENCE_ROOT` 改父目录基准。Density
+也可用 `PRISM_REFERENCE_ROOT` 改父目录基准及历史参考产物的查找根目录。Density
 还读取五个已锁 hash 的 official output JSONL，并固定 base
 `Qwen/Qwen3-8B@b968826...`；suite YaRN4 只负责这些 prompt 的历史生成。脚本不执行父仓源码。
 
@@ -70,5 +72,7 @@ extraction、RULER QA-Hotpot、NIAH multi-query；每类使用父实验相同的
 mass threshold；token Top-P 仍是 `.93`。LongBench、Density 和 Efficiency 保持 `.93`，
 因此不存在一套诚实的“全任务共同最优 threshold”。
 
-FastDeploy 的现有 formal 报告未在全部长度达到目标；vLLM 和 ThreeWay 没有完整 paired
-formal 结果。因此它们没有稳定 shell 入口，相关 `eval/` 源码仅供开发验证。
+FastDeploy/vLLM 四臂吞吐评测另有
+[`eval/ThreeWay/reproduce_128k.sh`](../eval/ThreeWay/reproduce_128k.sh) 入口，环境、模型和
+输出目录配置见 [四臂评测说明](../eval/ThreeWay/README.md)。该实验的历史报告未随本仓库
+发布，使用者应以自己运行生成的测量结果为准。

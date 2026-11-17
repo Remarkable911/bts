@@ -83,7 +83,7 @@ REFERENCE_INPUT_SHA256 = {
 }
 REFERENCE_RESULT = {
     "path": (
-        "/home/lsf/experiments/prism-token-sparse/work/"
+        "work/"
         "efficiency_current_fourway_strict_20261106/summary.json"
     ),
     "sha256": "d7bf3f227a15d9844ac2644af684a2a3f98924220e2b7c0849c7c224ac71c423",
@@ -961,10 +961,14 @@ def _runner_source_hashes() -> dict[str, Any]:
 
 def _historical_reference() -> dict[str, Any]:
     reference = dict(REFERENCE_RESULT)
-    path = Path(str(reference["path"]))
+    reference_root = Path(
+        os.environ.get("PRISM_REFERENCE_ROOT", str(SUBMISSION_ROOT.parent))
+    ).expanduser()
+    path = (reference_root / str(reference["path"])).resolve(strict=False)
     observed = file_sha256(path) if path.is_file() else None
     reference.update(
         {
+            "resolved_path": str(path),
             "source_present": path.is_file(),
             "observed_sha256": observed,
             "source_hash_verified": observed == reference["sha256"],

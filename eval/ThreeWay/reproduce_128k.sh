@@ -6,12 +6,15 @@ usage() {
 Usage:
   bash eval/ThreeWay/reproduce_128k.sh [OUTPUT_DIR] [GPU]
 
-The defaults reproduce the completed H100 128K four-arm experiment on this
-machine. Every path and timeout can also be overridden with an environment
-variable:
+Run the H100 128K four-arm protocol with your own installed environments and
+prepared model directories. These environment variables are required:
 
   FASTDEPLOY_PYTHON, VLLM_PYTHON
-  FASTDEPLOY_MODEL, VLLM_MODEL, BTS_CONFIG
+  FASTDEPLOY_MODEL, VLLM_MODEL
+
+Optional overrides:
+
+  BTS_CONFIG
   OUTPUT, GPU, WAIT_FOR_GPU_SECONDS, GPU_POLL_SECONDS
   GPU_IDLE_STABILITY_SECONDS, WORKER_TIMEOUT_SECONDS
   MAX_CONTAMINATION_RETRIES_PER_ARM
@@ -19,8 +22,15 @@ variable:
   GPU_RECOVERY_TIMEOUT_SECONDS
 
 Examples:
+  export FASTDEPLOY_PYTHON=/absolute/path/to/fastdeploy/bin/python
+  export VLLM_PYTHON=/absolute/path/to/vllm/bin/python
+  export FASTDEPLOY_MODEL=/absolute/path/to/Qwen3-8B-YaRN4-paddleformers
+  export VLLM_MODEL=/absolute/path/to/Qwen3-8B-YaRN4
   bash eval/ThreeWay/reproduce_128k.sh
-  WAIT_FOR_GPU_SECONDS=604800 GPU=0 bash eval/ThreeWay/reproduce_128k.sh
+
+The default output is a new directory under the repository's results/throughput/.
+The fixed model/tokenizer hashes must still match the reference experiment;
+overriding a path does not change the protocol's expected model contents.
 
 At exit the script prints four-arm median measured times and throughputs, all
 three speedup comparisons, their 95% lower bounds, the 1.5x target, total wall
@@ -42,14 +52,16 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd -- "${SCRIPT_DIR}/../.." && pwd)"
 cd "${REPO_ROOT}"
 
-FASTDEPLOY_PYTHON="${FASTDEPLOY_PYTHON:-/data3/lsf_data/prism_artifacts/fastdeploy_20261031_deployment/venv/bin/python}"
-VLLM_PYTHON="${VLLM_PYTHON:-/data3/lsf_data/miniconda3/envs/llm/bin/python}"
-FASTDEPLOY_MODEL="${FASTDEPLOY_MODEL:-/data3/lsf_data/prism_artifacts/fastdeploy_128k_acceptance_20261109/Qwen3-8B-YaRN4-paddleformers}"
-VLLM_MODEL="${VLLM_MODEL:-/data3/lsf_data/prism_data/results/ruler/topk040_tail256_yarn4_20261104/Qwen3-8B-YaRN4}"
+for required in FASTDEPLOY_PYTHON VLLM_PYTHON FASTDEPLOY_MODEL VLLM_MODEL; do
+  if [[ -z ${!required:-} ]]; then
+    echo "error: set ${required} to a path on this machine; see --help" >&2
+    exit 2
+  fi
+done
 BTS_CONFIG="${BTS_CONFIG:-${REPO_ROOT}/integrations/fastdeploy/configs/topk040_tail256.json}"
 
 RUN_STAMP="$(date +%Y%m%d_%H%M%S)"
-DEFAULT_OUTPUT="/data3/lsf_data/prism_artifacts/bts_three_way_128k_repro_${RUN_STAMP}"
+DEFAULT_OUTPUT="${REPO_ROOT}/results/throughput/four-arm-${RUN_STAMP}"
 OUTPUT_DIR="${1:-${OUTPUT:-${DEFAULT_OUTPUT}}}"
 GPU_SELECTOR="${2:-${GPU:-0}}"
 

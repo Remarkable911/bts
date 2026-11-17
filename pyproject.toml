@@ -5,10 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bts"
 version = "0.3.0"
-description = "Frozen BTS token-sparse attention submission"
+description = "BTS hierarchical token-sparse attention for long-context inference"
 readme = "README.md"
 requires-python = ">=3.10"
 license-files = [
+    "LICENSE",
     "THIRD_PARTY_NOTICES.md",
     "baselines/licenses/*.txt",
     "eval/common/lm_eval_harness/LICENSE.md",
@@ -66,6 +67,7 @@ bts_vllm = "integrations/vllm/src/bts_vllm"
     "*.cu",
 ]
 "baselines" = ["README.md", "UPSTREAM.json", "licenses/*.txt"]
+"bts_fastdeploy" = ["approved_upstream_sources.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

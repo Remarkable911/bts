@@ -21,5 +21,8 @@ bts-fastdeploy = "bts_fastdeploy.run:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+"bts_fastdeploy" = ["approved_upstream_sources.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

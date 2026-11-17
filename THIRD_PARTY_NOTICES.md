@@ -1,5 +1,28 @@
 # Third-party notices
 
+## License scope
+
+The root `LICENSE` grants the MIT License for original BTS contributions.
+Third-party source code, derived portions, datasets, and model weights are
+not relicensed by that grant. Their existing notices and license terms take
+precedence for those materials.
+
+In particular, the XAttention-derived portions of `baselines/XAttention.py`
+and `baselines/FlexPrefill.py` are not covered by the BTS MIT grant. Their
+upstream permission remains unresolved: the pinned XAttention revision has
+no top-level license, and its packaging metadata does not declare one.
+Do not interpret this notice, the repository's visibility, or the bundled
+kernel licenses as permission from the XAttention authors. Redistribution
+under a confirmed license requires clarification from those rights holders
+or replacement of the affected portions with appropriately licensed code.
+
+This observation was rechecked on 2026-11-17 against the
+[pinned XAttention source](https://github.com/mit-han-lab/x-attention/tree/e37988770b9d1bebd489eba011d615f35587ba08)
+and its
+[package metadata](https://github.com/mit-han-lab/x-attention/blob/e37988770b9d1bebd489eba011d615f35587ba08/setup.py).
+The licenses in its unrelated evaluation subdirectories are not treated as
+licenses for the XAttention implementation.
+
 ## Evaluation baselines
 
 `baselines/` contains the Qwen3 comparison adapters used by the BTS

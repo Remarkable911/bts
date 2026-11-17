@@ -32,6 +32,13 @@ FastDeploy 和 vLLM 吞吐评测需要两个独立环境，不能直接复用上
 
 ## 安装
 
+先下载仓库并进入项目目录：
+
+```bash
+git clone https://github.com/Remarkable911/bts.git
+cd bts
+```
+
 建议创建独立的 Conda 环境：
 
 ```bash
@@ -193,3 +200,12 @@ export VLLM_MODEL=/absolute/path/to/Qwen3-8B-YaRN4
 [`eval/ThreeWay/README.md`](eval/ThreeWay/README.md)。
 
 上述入口结束后都会在终端打印本次运行的汇总，并将完整结果写入指定的 `results/` 目录。
+
+## 许可证与第三方代码
+
+BTS 原创代码采用 [MIT License](LICENSE)。第三方代码保留各自的许可与版权声明，
+具体范围见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+`baselines/XAttention.py` 和 `baselines/FlexPrefill.py` 中源自 XAttention 的部分
+仍有上游许可待确认，不包含在 BTS 的 MIT 授权中。仓库公开和添加 MIT 文件不代表
+这些第三方部分已经获得重新授权。

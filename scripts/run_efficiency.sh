@@ -5,7 +5,7 @@ script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 repo_root=$(cd -- "$script_dir/.." && pwd)
 python_bin=${PYTHON_BIN:-python}
 
-replay_root=${EFFICIENCY_REPLAY_ROOT:-/data3/lsf_data/prism_artifacts/efficiency_review_20261009_inputs}
+replay_root=${EFFICIENCY_REPLAY_ROOT:-}
 args=("$@")
 
 has_option() {
@@ -38,8 +38,16 @@ done
 
 add_value --model "Qwen/Qwen3-8B"
 add_value --revision "b968826d9c46dd6066d109eabc6255188de91218"
-if ! has_input_source; then
+if ! has_input_source && ! has_option --help && ! has_option -h; then
     if [[ $requested_layer == 12 || -n ${EFFICIENCY_REPLAY_ROOT:-} ]]; then
+        if [[ -z $replay_root ]]; then
+            echo "error: set EFFICIENCY_REPLAY_ROOT to the directory containing replay_{32768,65536,131072}.pt, or pass --attention-inputs-dir, --data-path, or --prompt" >&2
+            exit 2
+        fi
+        if [[ ! -d $replay_root ]]; then
+            echo "error: replay directory does not exist: $replay_root" >&2
+            exit 2
+        fi
         add_value --attention-inputs-dir "$replay_root"
     fi
 fi

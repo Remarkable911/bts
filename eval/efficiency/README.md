@@ -7,17 +7,20 @@ arguments。每个方法跑
 3 轮，每轮 3 次 warmup 和 8 次计时，最终口径是 per-round mean 的 median。
 
 ```bash
+export EFFICIENCY_REPLAY_ROOT=/absolute/path/to/efficiency_replays
 CUDA_VISIBLE_DEVICES=0 \
-PYTHON_BIN=/data3/lsf_data/miniconda3/envs/prism/bin/python \
+PYTHON_BIN="$(command -v python)" \
 bash scripts/run_efficiency.sh
 ```
 
-默认测试 zero-based layer 12，并自动使用上述父实验的 frozen replay；`--layer` 支持
+默认测试 zero-based layer 12，需通过 `EFFICIENCY_REPLAY_ROOT` 或
+`--attention-inputs-dir` 指向准备好的 frozen replay 目录。未指定数据来源时脚本会
+给出提示并退出，不会查找开发者服务器上的目录。`--layer` 支持
 空格和等号两种覆盖形式。显式测试其他层且未提供 replay 时，runner 会加载真实模型并
 捕获指定层的输入，不会继续注入默认的 layer-12 replay。例如：
 
 ```bash
-bash scripts/run_efficiency.sh \
+env -u EFFICIENCY_REPLAY_ROOT bash scripts/run_efficiency.sh \
   --layer 18 \
   --output "$PWD/results/efficiency/bts_topk040_tail256_layer18_capture.json"
 ```
@@ -32,18 +35,17 @@ bash scripts/run_efficiency.sh \
   --output "$PWD/results/efficiency/bts_topk040_tail256_layer18_replay.json"
 ```
 
-该命令会直接执行完整计时并写入默认结果文件。默认 replay 目录为：
-
-```text
-/data3/lsf_data/prism_artifacts/efficiency_review_20261009_inputs
-```
+上述命令会直接执行完整计时并写入结果文件。replay 文件不随仓库发布，需要自行准备；
+默认 layer-12 协议期望目录中包含 `replay_32768.pt`、`replay_65536.pt` 和
+`replay_131072.pt`。如需从模型捕获自定义输入，可显式提供 `--prompt` 或 `--data-path`；
+自定义输入不等同于已锁定哈希的历史 replay。
 
 成功结束时，终端会从本次运行生成的 `summary_rows` 打印与父目录相同口径的固定宽度
 汇总表，包含方法、长度、attention latency、相对 Dense 加速、峰值显存和 logical
 density，并显示结果 JSON 路径。表格不会读取
 `historical_reference` 来补数；失败异常仍直接抛出，不伪装成成功汇总。
 
-搬移数据时通过 `EFFICIENCY_REPLAY_ROOT=/absolute/path` 覆盖。runner 会逐个校验
+runner 会逐个校验
 `replay_{length}.pt` 的 batch/length、BF16、layer=12、模型 ID、模型 revision 与捕获输入
 SHA256；不加载或执行父仓源码。
 
@@ -58,6 +60,10 @@ FlexPrefill，因此新运行的 FlexPrefill 数值只来自本次计时，不�
 32K/64K/128K latency median 为
 `22.6069040 / 51.5108957 / 140.1575356 ms`，相对 forced Flash 为
 `2.18718x / 3.35468x / 4.88126x`。
+
+此历史产物未随仓库发布；如果拥有该产物，可用 `PRISM_REFERENCE_ROOT` 指定其所在
+开发项目的根目录以启用来源哈希校验。缺少历史产物时，报告会如实记录
+`source_present=false`。
 
 这些历史值只写入 `historical_reference` 作为 provenance，
 `reproduced_by_current_run=false`；新运行只报告自己的计时，绝不会把历史数值预填成新

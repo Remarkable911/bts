@@ -14,11 +14,11 @@ default run evaluates 1,500 samples. Base task IDs supplied through `--tasks`
 are resolved to the suite's `official_fixed_*` leaves before lm-eval starts.
 
 ```bash
+export RULER_SUITE_ROOT=/absolute/path/to/ruler_suite
 CUDA_VISIBLE_DEVICES=0 bash scripts/run_ruler.sh \
   --model /path/to/Qwen3-8B-YaRN4 \
   --output /external/results/ruler-bts \
-  --ruler-suite \
-    ../results/ruler/topk040_tail256_official_protocol_20261105
+  --ruler-suite "$RULER_SUITE_ROOT"
 ```
 
 Select one or more tasks with a comma-separated argument:
@@ -63,11 +63,13 @@ block-threshold profile is 82.2628205 at 32K, 75.1666667 at 64K, and
 69.6769231 at 128K. These full-suite macro values are provenance only for a
 selected-task run and are not presented as its aggregate. The raw result
 is
-`/data3/lsf_data/prism_data/results/ruler/topk040_tail256_official_protocol_threshold095_20261105/outputs/results_2026-11-06T22-31-42.346281.json`
+`results/ruler/topk040_tail256_official_protocol_threshold095_20261105/outputs/results_2026-11-06T22-31-42.346281.json`
 with SHA256
 `cc333bc31b199b2ccc1f01a6e586d15d649a71d906020f146107f432960bd406`.
 This is provenance for a previously completed run; a newly launched evaluation
 must not be described as having reproduced it until it produces matching evidence.
+The historical result is not bundled. If you have it, set `PRISM_REFERENCE_ROOT`
+to the directory containing that `results/` tree to verify its hash.
 
 `run.py` exposes the same single-run path directly. Create the required YaRN4
 overlay with `python eval/common/prepare_yarn_model.py ...` before a formal run.

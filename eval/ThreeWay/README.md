@@ -1,8 +1,9 @@
 # 128K 四臂吞吐实验
 
-> **正式状态：** 四臂实验已经完成并提供稳定的一键入口
-> [`reproduce_128k.sh`](./reproduce_128k.sh)。已验证结果和不可变产物见
-> [`docs/bts_three_way_128k_throughput_report_20261112.md`](../../docs/bts_three_way_128k_throughput_report_20261112.md)。
+> **发布范围：** 本仓库提供四臂实验协议及
+> [`reproduce_128k.sh`](./reproduce_128k.sh) 入口。开发阶段的实验报告和原始测量产物
+> 未随本仓库发布；本页不提供可供独立核验的历史吞吐结果。
+> 请配置自己的运行环境和模型路径，并以新运行生成的报告为准。
 
 [`run.py`](./run.py) 只负责**合同校验和统计分析**；[`execute.py`](./execute.py)
 是对应的受信执行层，会用两个独立 Python 环境实际启动 FastDeploy/vLLM 四臂。
@@ -135,12 +136,19 @@ bootstrap；每次重采样完整 restart index，而且三个比较共享同一
 输出目录必须尚不存在。FastDeploy 和 vLLM 可以安装在不同 venv；执行器用指定解释器
 分别启动 worker，不要求在控制器环境同时安装两个引擎：
 
-本机使用已验证环境和模型路径的一键复现命令为：
+先在仓库根目录配置两个环境和对应的模型目录，再执行复现脚本：
 
 ```bash
-cd /home/lsf/experiments/prism-token-sparse/prism-token-sparse-submission
+export FASTDEPLOY_PYTHON=/absolute/path/to/fastdeploy/bin/python
+export VLLM_PYTHON=/absolute/path/to/vllm/bin/python
+export FASTDEPLOY_MODEL=/absolute/path/to/Qwen3-8B-YaRN4-paddleformers
+export VLLM_MODEL=/absolute/path/to/Qwen3-8B-YaRN4
 WAIT_FOR_GPU_SECONDS=604800 bash eval/ThreeWay/reproduce_128k.sh
 ```
+
+脚本要求显式提供上述四个路径；缺失时会在加载模型前报错。默认输出写入仓库内新的
+`results/throughput/four-arm-时间戳` 目录，也可通过第一个位置参数或 `OUTPUT` 指定。
+该入口保留参考实验的模型与 tokenizer 内容哈希，迁移目录不改变这些校验条件。
 
 脚本结束前会打印四臂测量耗时中位数、吞吐中位数、三项加速比、单侧 95% 下界、
 `1.5x` 目标、整套控制器墙钟耗时及结果路径，不显示 PASS/FAIL 状态文字。以下是需要
